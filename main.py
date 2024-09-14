@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+import re
 
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
@@ -25,9 +26,11 @@ data = []
 
 for movie in movies:
     title = movie.find('h3', class_='ipc-title__text').text.strip()
+    title = re.sub(r'^\d+\.\s*', '', title)
     year = movie.find('span', class_='cli-title-metadata-item').text.strip()
+    year = int(year)
     rating = movie.find('span', class_='ipc-rating-star').text.strip()
-    rating = rating.split()[0]
+    rating = float(rating.split()[0])
     watched = ""
     data.append([title, year, rating, watched])
 
